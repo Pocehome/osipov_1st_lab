@@ -74,7 +74,7 @@ def make_graph(gamma, step_count):
         
         if gamma < 1:
             # take neg solution of equation and reduce it to [0, 2pi]:
-            theta_lim = 2*np.pi - n * np.acos(gamma)
+            theta_lim = 2*np.pi - n * np.arccos(gamma)
             
             draw_graph(norm_arr_sol, theta_true, arr_t,
                        [(0, 2*np.pi), (0, step_count*step_size)], [gamma, n],
