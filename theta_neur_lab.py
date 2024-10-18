@@ -26,7 +26,7 @@ def theta_neur_dyn(gamma, n):
 #     return normalized
 
 
-def draw_graph(theta_num, theta_true, t, limits, title, theta_lim=0): 
+def draw_graph(theta_num, theta_true, t, limits, title, theta_lim=0, T=0): 
     x_lims, t_lims = limits
     plt.ylim(x_lims[0], x_lims[1])
     plt.xlim(t_lims[0], t_lims[1])
@@ -36,6 +36,8 @@ def draw_graph(theta_num, theta_true, t, limits, title, theta_lim=0):
     
     if theta_lim:
         plt.axhline(y=theta_lim, color='black', linestyle='--', label='\u03B81')
+    if T:
+        plt.axvline(x=T, color='black', linestyle='--', label=f'T={T}')
     
     plt.title(f"\u03B3={title[0]}, n={title[1]}")
     plt.xlabel('time', fontsize=10, color='black')
@@ -72,16 +74,30 @@ def make_graph(gamma, step_count):
         # draw graphs
         norm_arr_sol = np.mod(arr_sol, 2*np.pi)     # [0; 2pi]
         
+        # search period
+        T = 0
+        spikes_count = 0
+        for i in range(step_count - 1):
+            if (int(norm_arr_sol[i]) == 6 and 
+                int(norm_arr_sol[i+1]) == 0):
+                spikes_count += 1
+            if spikes_count == n:
+                T = arr_t[i+1]
+                break
+        
         if gamma < 1:
             # take neg solution of equation and reduce it to [0, 2pi]:
             theta_lim = 2*np.pi - n * np.arccos(gamma)
             
+            # if gamma < 1, we also draw theta limit
             draw_graph(norm_arr_sol, theta_true, arr_t,
                        [(0, 2*np.pi), (0, step_count*step_size)], [gamma, n],
                        theta_lim=theta_lim)
         else:
+            #  if gamma > 1, we also draw period
             draw_graph(norm_arr_sol, theta_true, arr_t,
-                       [(0, 2*np.pi), (0, step_count*step_size)], [gamma, n])
+                       [(0, 2*np.pi), (0, step_count*step_size)], [gamma, n],
+                       T=T)
 
 
 if __name__ == '__main__':
