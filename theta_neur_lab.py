@@ -53,11 +53,12 @@ def make_graph(gamma, step_count):
     theta0 = 0.
     
     for n in [1, 3]:
+        
         # numerical integration
         rhs = theta_neur_dyn(gamma, n)
         sol = theta0
         
-        if n == 3 and 1 < gamma < 1.2:
+        if n == 3 and 1 < gamma <= 1.2:
             step_count *= 2
             
         step_size = 0.01
@@ -71,8 +72,8 @@ def make_graph(gamma, step_count):
 
         theta_true = [0]    # temporary zaglushka
         
-        # draw graphs
-        norm_arr_sol = np.mod(arr_sol, 2*np.pi)     # [0; 2pi]
+        # normalize the solution by [0; 2pi]
+        norm_arr_sol = np.mod(arr_sol, 2*np.pi)
         
         # search period
         T = 0
@@ -85,6 +86,7 @@ def make_graph(gamma, step_count):
                 T = arr_t[i+1]
                 break
         
+        # draw graphs
         if gamma < 1:
             # take neg solution of equation and reduce it to [0, 2pi]:
             theta_lim = 2*np.pi - n * np.arccos(gamma)
@@ -94,7 +96,7 @@ def make_graph(gamma, step_count):
                        [(0, 2*np.pi), (0, step_count*step_size)], [gamma, n],
                        theta_lim=theta_lim)
         else:
-            #  if gamma > 1, we also draw period
+            # if gamma > 1, we also draw period
             draw_graph(norm_arr_sol, theta_true, arr_t,
                        [(0, 2*np.pi), (0, step_count*step_size)], [gamma, n],
                        T=T)
@@ -105,6 +107,6 @@ if __name__ == '__main__':
     make_graph(0.1, 2000)
     make_graph(0.5, 2000)
     make_graph(1.01, 10000)
-    make_graph(1.2, 5000)
-    make_graph(5., 1000)
+    make_graph(1.2, 2500)
+    make_graph(5., 500)
     
