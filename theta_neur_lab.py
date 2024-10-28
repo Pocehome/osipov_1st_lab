@@ -27,10 +27,10 @@ def theta_true(gamma, n, t):
         b = (gamma - 1)**0.5 / (gamma + 1)**0.5
         res = 2*n * np.arctan(a*b)
     else:
-        # a = np.tan(t * (1 - gamma**2)**0.5 / n)
-        # b = (gamma - 1) / (1 - gamma**2)**0.5
-        # res = 2*n * np.arctan(a*b)
-        res = t * 0
+        a = ((1 - gamma) / (1 + gamma))**0.5
+        # C = abs((a - np.tan(np.pi / n)) / (a + np.tan(np.pi / n)))
+        C = 1
+        res = 2*n * np.arctan(2*a / (1 + C*np.exp((1 - gamma**2)**0.5 / n * t)) - a)
     return res
 
 # def normalize_angle(angle):
